@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDo</title>
+
+    <link rel="stylesheet" href="./dist/css/style.min.css">
+
+    <script src="https://kit.fontawesome.com/c84b3d97d1.js" crossorigin="anonymous"></script>
+</head>
+
+
+<body>
+
+    <div class="todo-body">
+        <div class="todo-header">
+            <h2 class="todo-title">TO DO LIST</h2>
+            <input type="text" class="input todo-input" placeholder="Wpisz treść zadania">
+
+            <div class="inputs-box">
+                <input type="date" min="2023-01-01" max="2023-12-31" class="input date-input">
+                <select class="input priority">
+                    <option value="0" selected disabled>Wybierz priorytet</option>
+                    <option value="1">Niski</option>
+                    <option value="2">Średni</option>
+                    <option value="3">Wysoki</option>
+                </select>
+                <button class="add-btn"> dodaj</button>
+            </div>
+
+        </div>
+
+        <div class="todo-list">
+            <h3 class="list-title">Lista zadań</h3>
+
+            <ul class="list">
+
+                <div class="task task-title">
+                    <div class="box title">Nazwa zadania</div>
+                    <div class="box priority">Priorytet</div>
+                    <div class="box date">Skończyć do</div>
+                    <div class="box tools">Funkcje</div>
+                </div>
+                <p class="todo-alert">Lista zadań jest pusta</p>
+                <!-- <li class="task" id="test">
+                    <div class="box title">Wypic kawe</div>
+                    <div class="box priority">Niski</div>
+                    <div class="box date">2023-01-01</div>
+                    <div class="box tools">
+                        <button class="complete"><i class="fas fa-check"></i></button>
+                        <button class="edit">EDIT</button>
+                        <button class="remove"><i class="fas fa-times"></i></button>
+                    </div>
+                </li> -->
+            </ul>
+        </div>
+    </div>
+
+    <div class="popup">
+        <h3 class="popup-title">Edytuj zadanie</h3>
+        <div class="popup-body">
+            <input type="text" class="input popup-input">
+            <input type="date" min="2023-01-01" max="2023-12-31" class="input popup-date">
+            <select class="input popup-priority">
+                <option value="0" selected disabled>Wybierz priorytet</option>
+                <option value="1">Niski</option>
+                <option value="2">Średni</option>
+                <option value="3">Wysoki</option>
+            </select>
+
+            <button class="button apply">Zatwierdź</button>
+            <button class="button cancel">Anuluj</button>
+        </div>
+    </div>
+
+
+    <script src="./dist/js/main.min.js"></script>
+</body>
+
+</html>
