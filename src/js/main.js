@@ -17,10 +17,21 @@ let AllLi
 let ClosePopupBtn
 let ChangeTaskBtn
 let TaskTitle
+let Day
+let Month
+let Year
+let FullDate
+let InputAlert
+let PopupAlert
 
 const main = () => {
 	prepareDOMElements()
 	prepareDOMEvents()
+	Day = new Date().getDate()
+	Month = new Date().getMonth() + 1
+	Year = new Date().getFullYear()
+
+	FullDate = Date.parse(`${Year}-${Month}-${Day}`)
 }
 
 const prepareDOMElements = () => {
@@ -43,21 +54,78 @@ const prepareDOMElements = () => {
 	ClosePopupBtn = document.querySelector(".cancel")
 	ChangeTaskBtn = document.querySelector(".apply")
 	TaskTitle = document.querySelector(".task-title")
+	InputAlert = document.querySelector(".inputs-alert")
+	PopupAlert = document.querySelector(".popup-alert")
 }
 
 const prepareDOMEvents = () => {
 	TodoList.addEventListener("click", checkClick)
-	AddBtn.addEventListener("click", addTodo)
+	AddBtn.addEventListener("click", checkTodo)
 	ClosePopupBtn.addEventListener("click", closePopup)
-	ChangeTaskBtn.addEventListener("click", changeToDo)
+	ChangeTaskBtn.addEventListener("click", checkPopup)
 }
 
-const addTodo = () => {
+const checkTodo = () => {
 	if (
 		TodoInput.value !== "" &&
 		DateInput.value !== "" &&
+		Date.parse(DateInput.value) >= FullDate &&
 		PriorityInput.value !== "0"
 	) {
+		InputAlert.style.display = "none"
+		InputAlert.textContent = ""
+		addTodo()
+	} else if (
+		TodoInput.value == "" &&
+		DateInput.value == "" &&
+		PriorityInput.value == "0"
+	) {
+		InputAlert.style.display = "block"
+		InputAlert.textContent = "Wszystkie pola musza być wypełnione"
+	} else if (
+		TodoInput.value == "" &&
+		DateInput.value !== "" &&
+		PriorityInput.value !== "0"
+	) {
+		InputAlert.style.display = "block"
+		InputAlert.textContent = "Zadanie nie możesz być puste, wpisz treść zadania"
+	} else if (
+		TodoInput.value !== "" &&
+		DateInput.value !== "" &&
+		PriorityInput.value == "0"
+	) {
+		InputAlert.style.display = "block"
+		InputAlert.textContent = "Musisz wybrać priorytet zadania"
+	} else if (
+		TodoInput.value !== "" &&
+		DateInput.value == "" &&
+		PriorityInput.value !== "0"
+	) {
+		InputAlert.style.display = "block"
+		InputAlert.textContent = "Musisz wybrać datę zakończenia zadania"
+	} else if (
+		TodoInput.value !== "" &&
+		DateInput.value !== "" &&
+		Date.parse(DateInput.value) < FullDate &&
+		PriorityInput.value !== "0"
+	) {
+		InputAlert.style.display = "block"
+		InputAlert.textContent = "Nie możesz wybrać daty z przeszłości"
+	}
+}
+
+const checkPriority = (box, value) => {
+	if (value.value == "1") {
+		box.classList.add("green")
+	} else if (value.value == "2") {
+		box.classList.add("blue")
+	} else if (value.value == "3") {
+		box.classList.add("red")
+	}
+}
+
+const addTodo = () => {
+	{
 		Id++
 		NewTodo = document.createElement("li")
 		NewTodo.setAttribute("id", `id${Id}`)
@@ -70,15 +138,24 @@ const addTodo = () => {
 		taskTitle.textContent = TodoInput.value
 
 		const priority = document.createElement("div")
-		priority.classList.add("box", "priority")
+		priority.classList.add("box", "priority", "bolded")
 		priority.textContent =
 			PriorityInput.options[PriorityInput.selectedIndex].text
+		checkPriority(priority, PriorityInput)
 
 		const date = document.createElement("div")
 		date.classList.add("box", "date")
-
 		date.textContent = DateInput.value
-		NewTodo.append(taskTitle, priority, date)
+
+		const targetDate = document.createElement("div")
+		targetDate.classList.add("box", "target-date")
+		let result = Math.round(
+			(Date.parse(DateInput.value) - FullDate) / (1000 * 60 * 60 * 24)
+		)
+
+		targetDate.textContent = `${result} dni`
+
+		NewTodo.append(taskTitle, priority, date, targetDate)
 		TodoList.appendChild(NewTodo)
 		AlertInfo.style.display = "none"
 		TodoInput.value = ""
@@ -127,6 +204,8 @@ const checkClick = e => {
 }
 
 const editTask = e => {
+	Popup.style.display = "flex"
+
 	const oldToDo = e.target.closest("li").id
 	EditedToDo = document.getElementById(oldToDo)
 	EditedPriority = EditedToDo.getElementsByTagName("div")[1]
@@ -144,19 +223,72 @@ const editTask = e => {
 			PopupPriority.value = 3
 		}
 	}
-	Popup.style.display = "flex"
+}
+
+const checkPopup = () => {
+	if (
+		PopupInput.value !== "" &&
+		PopupDate !== "" &&
+		Date.parse(PopupDate.value) >= FullDate &&
+		PopupPriority !== "0"
+	) {
+		changeToDo()
+	} else if (
+		PopupInput.value == "" &&
+		PopupDate !== "" &&
+		Date.parse(PopupDate.value) >= FullDate &&
+		PopupPriority !== "0"
+	) {
+		PopupAlert.style.display = "block"
+		PopupAlert.textContent = "Treść zadania nie może być pusta"
+	} else if (
+		PopupInput.value !== "" &&
+		PopupDate == "" &&
+		Date.parse(PopupDate.value) >= FullDate &&
+		PopupPriority !== "0"
+	) {
+		PopupAlert.style.display = "block"
+		PopupAlert.textContent = "Wybierz date ukończenia zadania"
+	} else if (
+		PopupInput.value !== "" &&
+		PopupDate !== "" &&
+		Date.parse(PopupDate.value) < FullDate &&
+		PopupPriority !== "0"
+	) {
+		PopupAlert.style.display = "block"
+		PopupAlert.textContent = "Nie możesz wybrać daty z przeszłości"
+	}
 }
 
 const changeToDo = () => {
-	if (PopupInput.value !== "" && PopupDate !== "" && PopupPriority !== "0") {
-		EditedToDo.firstChild.textContent = PopupInput.value
-
+	EditedToDo.firstChild.textContent = PopupInput.value
+	if (Date.parse(PopupDate.value) >= FullDate) {
 		EditedDate.textContent = PopupDate.value
-		EditedPriority.textContent =
-			PopupPriority.options[PopupPriority.selectedIndex].text
-		Popup.style.display = "none"
-		PopupInput.value = ""
+		EditedToDo.getElementsByTagName("div")[3].textContent = `${Math.round(
+			(Date.parse(PopupDate.value) - FullDate) / (1000 * 60 * 60 * 24)
+		)} dni`
 	}
+	EditedPriority.textContent =
+		PopupPriority.options[PopupPriority.selectedIndex].text
+
+	switch (PopupPriority.value) {
+		case "1":
+			EditedPriority.classList.remove("red", "blue")
+			EditedPriority.classList.add("green")
+			break
+		case "2":
+			EditedPriority.classList.remove("red", "green")
+			EditedPriority.classList.add("blue")
+			break
+		case "3":
+			EditedPriority.classList.remove("blue", "green")
+			EditedPriority.classList.add("red")
+			break
+	}
+	Popup.style.display = "none"
+	PopupInput.value = ""
+	PopupAlert.style.display = "none"
+	PopupAlert.textContent = ""
 }
 
 const deleteToDo = e => {

@@ -31,6 +31,8 @@
                 <button class="add-btn"> dodaj</button>
             </div>
 
+            <div class="inputs-alert"></div>
+
         </div>
 
         <div class="todo-list">
@@ -42,6 +44,7 @@
                     <div class="box title">Nazwa zadania</div>
                     <div class="box priority">Priorytet</div>
                     <div class="box date">Skończyć do</div>
+                    <div class="box target-date">Do końca zadania:</div>
                     <div class="box tools">Funkcje</div>
                 </div>
                 <p class="todo-alert">Lista zadań jest pusta</p>
@@ -63,17 +66,21 @@
         <h3 class="popup-title">Edytuj zadanie</h3>
         <div class="popup-body">
             <input type="text" class="input popup-input">
-            <input type="date" min="2023-01-01" max="2023-12-31" class="input popup-date">
-            <select class="input popup-priority">
-                <option value="0" selected disabled>Wybierz priorytet</option>
-                <option value="1">Niski</option>
-                <option value="2">Średni</option>
-                <option value="3">Wysoki</option>
-            </select>
-
-            <button class="button apply">Zatwierdź</button>
-            <button class="button cancel">Anuluj</button>
+            <div class="popup-input-box">
+                <input type="date" min="2023-01-01" max="2023-12-31" class="input popup-date">
+                <select class="input popup-priority">
+                    <option value="0" selected disabled>Wybierz priorytet</option>
+                    <option value="1">Niski</option>
+                    <option value="2">Średni</option>
+                    <option value="3">Wysoki</option>
+                </select>
+            </div>
+            <div class="popup-button-box">
+                <button class="button apply">Zatwierdź</button>
+                <button class="button cancel">Anuluj</button>
+            </div>
         </div>
+        <div class="popup-alert"></div>
     </div>
 
 
